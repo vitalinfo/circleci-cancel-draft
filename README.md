@@ -16,7 +16,7 @@ jobs:
           CIRCLECI_TOKEN: ZZZZZZZZZZZ
           GITHUB_TOKEN:   XXXXXXXXXXX
     steps:
-      - run: cancel-draft-build --force
+      - run: cancel-draft-build
 
 workflows:
   version: 2

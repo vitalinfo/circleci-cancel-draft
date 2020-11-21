@@ -5,4 +5,4 @@ RUN set -x \
       && rm -rf /var/cache/apk/*
 
 COPY cancel-draft-build /bin/
-CMD ["/bin/cancel-draft-build", "--force"]
+CMD ["/bin/cancel-draft-build"]
