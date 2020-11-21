@@ -1,0 +1,39 @@
+#!/usr/bin/env bash
+
+set -euf -o pipefail
+
+if [[ -z "$CIRCLE_PULL_REQUEST" ]]; then
+  echo "Not PR branch, skipped"
+  exit 0
+fi
+
+PR_NUMBER=${CIRCLE_PULL_REQUEST//[!0-9]/}
+RESPONSE=$(curl --silent \
+  -H "Authorization: token $GITHUB_TOKEN" \
+  -H "Accept: application/vnd.github.v3+json" \
+  https://api.github.com/repos/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME/pulls/$PR_NUMBER
+)
+
+DRAFT=$(echo $RESPONSE | jq ".draft")
+DRAFT_LABEL=$(echo $RESPONSE | jq ".labels | map(select(.name | test(\"Draft\"))) | .[]")
+
+if [[ $DRAFT == 'true' || $DRAFT_LABEL ]]; then
+  echo "Draft PR"
+else
+  echo "Non Draft PR"
+  exit 0
+fi
+
+echo "Attempting to cancel any running jobs"
+CIRCLE_API_BASE_URL="https://circleci.com/api/v1.1/project/github/${CIRCLE_PROJECT_USERNAME}/${CIRCLE_PROJECT_REPONAME}"
+AUTH_PARAMS="circle-token=${CIRCLECI_TOKEN}"
+SELF_BUILD_NUM="${CIRCLE_BUILD_NUM}"
+
+ALL_JOBS=$(curl --silent --show-error "${CIRCLE_API_BASE_URL}/tree/${CIRCLE_BRANCH}?${AUTH_PARAMS}")
+
+RUNNING_JOBS=$(echo "${ALL_JOBS}" | jq "map(if .status == \"running\" or .status == \"not_run\"  then .build_num else \"None\" end) - [${SELF_BUILD_NUM}] - [\"None\"] | .[]")
+
+for buildNum in $RUNNING_JOBS; do
+  echo "Canceling ${buildNum}"
+  curl --silent --show-error --request POST "${CIRCLE_API_BASE_URL}/${buildNum}/cancel?${AUTH_PARAMS}" > /dev/null
+done
