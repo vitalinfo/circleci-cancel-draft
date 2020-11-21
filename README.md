@@ -1,7 +1,8 @@
 # circleci-cancel-draft
 
 CircleCI runs build for Draft PR.
-This docker image support cancel build if PR in the `Drfat` status or has `Draft` label. 
+
+This docker image supports cancel build if PR in the `Drfat` status or has `Draft` label. 
 
 
 ```yaml
