@@ -1,16 +1,16 @@
-# circleci-autocancel-draft
+# circleci-cancel-draft
 
 CircleCI runs build for Draft PR.
-This docker image support cacnel build if PR in the `Drfat` status or has `Draft` label. 
+This docker image support cancel build if PR in the `Drfat` status or has `Draft` label. 
 
 
 ```yaml
 version: 2
 jobs:
-  autocancel_draft_build:
+  cancel_draft_build:
     parallelism: 1
     docker:
-      - image: vitalinfo/circleci-autocancel-draft
+      - image: vitalinfo/circleci-cancel-draft
         environment:
           CIRCLECI_TOKEN: ZZZZZZZZZZZ
           GITHUB_TOKEN: XXXXXXXXXXXXX
@@ -21,12 +21,12 @@ workflows:
   version: 2
   tests:
     jobs:
-      - autocancel_draft_build
+      - cancel_draft_build
       - ... # other build steps
 ```
 
 ## Deployment
 
 ```bash
-$ docker build . -t vitalinfo/circleci-autocancel-draft && docker push vitalinfo/circleci-autocancel-draft
+$ docker build . -t vitalinfo/circleci-cancel-draft && docker push vitalinfo/circleci-cancel-draft
 ```
