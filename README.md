@@ -13,7 +13,7 @@ jobs:
       - image: vitalinfo/circleci-cancel-draft
         environment:
           CIRCLECI_TOKEN: ZZZZZZZZZZZ
-          GITHUB_TOKEN: XXXXXXXXXXXXX
+          GITHUB_TOKEN:   XXXXXXXXXXX
     steps:
       - run: cancel-draft-build --force
 
