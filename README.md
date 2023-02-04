@@ -31,3 +31,22 @@ workflows:
 ```bash
 $ docker build . -t vitalinfo/circleci-cancel-draft && docker push vitalinfo/circleci-cancel-draft
 ```
+
+## Tokens
+
+### GitHub Token
+
+1. Open [New personal access token (classic)](https://github.com/settings/tokens/new)
+2. Set _Note_
+3. Choose _Expiration_
+4. Select _workflow_ scope
+![readme.png](readme.png)
+5. Click _Generate token_
+
+### CircleCI Token
+
+1. Open [Personal API Tokens](https://app.circleci.com/settings/user/tokens)
+2. Click _Create New API Token_
+3. Set _Token Name_
+4. Click _Add API Token_
+
